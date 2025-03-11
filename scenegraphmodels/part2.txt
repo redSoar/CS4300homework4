@@ -1,0 +1,7 @@
+#scenegraph (final):
+# root
+#   - ground
+#   - humanoid1
+#   - humanoid2
+#   - building
+#       - turret
