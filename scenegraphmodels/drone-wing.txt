@@ -1,0 +1,22 @@
+# shapes used in this model
+instance box models/box.obj
+
+#material
+material mat-wing
+ambient 0 1 1
+end-material
+
+#the root
+group wing wing
+rotate r-wing r-wing 60 0 0 1
+add-child r-wing wing
+scale s-wing s-wing 3 50 3
+add-child s-wing r-wing
+leaf stick stick instanceof box
+assign-material stick mat-wing
+add-child stick s-wing
+
+add-child node-3-0 node-2-0
+add-child node-2-0 node-1-0
+
+assign-root wing

@@ -1,0 +1,22 @@
+# shapes used in this model
+instance box models/box.obj
+
+#material
+material mat-leg
+ambient 1 0 0
+end-material
+
+#the root
+group node-1-0 leg
+scale node-2-0 scale 7 30 7
+leaf node-3-0 one-box instanceof box
+assign-material node-3-0 mat-leg
+
+add-child node-3-0 node-2-0
+add-child node-2-0 node-1-0
+assign-root node-1-0
+
+#scenegraph:
+# body
+#   - scale
+#       - one-box

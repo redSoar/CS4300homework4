@@ -38,7 +38,7 @@ void Controller::initScenegraph() {
         model.setScenegraph(scenegraph);
     }
     else {
-        ifstream inFile("scenegraphmodels/castle.txt");
+        ifstream inFile("scenegraphmodels/propellor.txt");
         sgraph::ScenegraphImporter importer;
     
         IScenegraph *scenegraph = importer.parse(inFile);

@@ -1,0 +1,85 @@
+# shapes used in this model
+instance sphere models/sphere.obj
+instance box models/box.obj
+
+#material
+material head-material 
+ambient 1 1 0
+end-material
+
+material body-material 
+ambient 0 0 1
+end-material
+
+material eye-material
+ambient 0 1 0
+end-material
+
+group drone drone
+
+#drone body
+scale s-body s-body 100 25 50
+add-child s-body drone
+leaf body body instanceof box
+add-child body s-body 
+assign-material body body-material 
+
+#drone head
+translate t-head t-head -50 0 0
+add-child t-head drone
+scale s-head s-head 10 15 40
+add-child s-head t-head
+leaf head head instanceof box
+add-child head s-head 
+assign-material head head-material 
+
+#drone eye
+translate t-eye t-eye -52.5 0 0
+add-child t-eye drone
+scale s-eye s-eye 5 5 5
+add-child s-eye t-eye
+leaf eye eye instanceof sphere
+add-child eye s-eye 
+assign-material eye eye-material 
+
+#first wing
+rotate r-wing-1 r-wing-1 90 0 1 0
+add-child r-wing-1 drone
+translate t-wing-1 t-wing-1 -40 25 0
+add-child t-wing-1 r-wing-1
+import wing-1 scenegraphmodels/drone-wing.txt
+add-child wing-1 t-wing-1
+
+#second wing
+rotate r-wing-1 r-wing-1 -90 0 1 0
+add-child r-wing-1 drone
+translate t-wing-1 t-wing-1 -40 25 0
+add-child t-wing-1 r-wing-1
+import wing-1 scenegraphmodels/drone-wing.txt
+add-child wing-1 t-wing-1
+
+#first leg
+translate t-leg-1 t-leg-1 46.5 -27.5 21.5
+add-child t-leg-1 drone
+import leg-1 scenegraphmodels/drone-leg.txt
+add-child leg-1 t-leg-1
+
+#second leg
+translate t-leg-2 t-leg-2 46.5 -27.5 -21.5
+add-child t-leg-2 drone
+import leg-2 scenegraphmodels/drone-leg.txt
+add-child leg-2 t-leg-2
+
+#third leg
+translate t-leg-3 t-leg-3 -46.5 -27.5 21.5
+add-child t-leg-3 drone
+import leg-3 scenegraphmodels/drone-leg.txt
+add-child leg-3 t-leg-3
+
+#fourth leg
+translate t-leg-4 t-leg-4 -46.5 -27.5 -21.5
+add-child t-leg-4 drone
+import leg-4 scenegraphmodels/drone-leg.txt
+add-child leg-4 t-leg-4
+
+assign-root drone
