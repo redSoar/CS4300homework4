@@ -126,8 +126,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     modelview.push(glm::mat4(1.0));
     modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
     // rotate by the amount that the cursor travels in the x and y coordinates
-    modelview.top() = modelview.top() * glm::rotate(glm::mat4(1.0f), glm::radians(rotateAmount[0]), glm::vec3(0.0f, 1.0f, 0.0f)) 
-                                      * glm::rotate(glm::mat4(1.0f), glm::radians(rotateAmount[1]), glm::vec3(1.0f, 0.0f, 0.0f));
+    modelview.top() = modelview.top() * rotateAmount[1] * rotateAmount[0];
     
     //
     //send projection matrix to GPU    
@@ -167,8 +166,8 @@ void View::findMousePos(bool init)
     else {
         float diffx = (float)xpos - prevpos[0];
         float diffy = (float)ypos - prevpos[1];
-        rotateAmount[0] += (diffx);
-        rotateAmount[1] += (diffy);
+        rotateAmount[0] = rotateAmount[0] * glm::rotate(glm::mat4(1.0f), glm::radians(diffx), glm::vec3(0.0f, 1.0f, 0.0f));
+        rotateAmount[1] = rotateAmount[1] * glm::rotate(glm::mat4(1.0f), glm::radians(diffy), glm::vec3(1.0f, 0.0f, 0.0f));
         // prep for next position
         prevpos[0] = (float)xpos;
         prevpos[1] = (float)ypos;
@@ -178,8 +177,8 @@ void View::findMousePos(bool init)
 // reset the rotation
 void View::resetTrackball()
 {
-    rotateAmount[0] = 0.0f;
-    rotateAmount[1] = 0.0f;
+    rotateAmount[0] = glm::mat4(1.0f);
+    rotateAmount[1] = glm::mat4(1.0f);
 }
 
 bool View::shouldWindowClose() {
