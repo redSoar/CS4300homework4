@@ -1,0 +1,87 @@
+# shapes used in this model
+instance box models/box.obj
+instance sphere models/sphere.obj
+
+#material
+material mat-axis
+emission 0 0 0
+ambient 0.8 0.8 0.8
+diffuse 1 0 0
+specular 1 0 0
+shininess 0
+end-material
+
+#material
+material mat-fan
+emission 0 0 0
+ambient 0 0.3 0
+diffuse 1 0 0
+specular 1 0 0
+shininess 0
+end-material
+
+group fans fans
+
+#the axis
+group axis axis
+scale s-axis s-axis 25 25 25
+leaf center center instanceof sphere
+assign-material center mat-axis
+
+#1st fan
+group fan-1 fan-1
+translate t-fan-1 t-fan-1 75 0 0
+scale s-fan-1 s-fan-1 150 10 35
+leaf wing-1 wing-1 instanceof box
+assign-material wing-1 mat-fan
+
+#2nd fan
+group fan-2 fan-2
+translate t-fan-2 t-fan-2 -75 0 0
+scale s-fan-2 s-fan-2 150 10 35
+leaf wing-2 wing-2 instanceof box
+assign-material wing-2 mat-fan
+
+#3rd fan
+group fan-3 fan-3
+translate t-fan-3 t-fan-3 0 0 75
+rotate r-fan-3 r-fan-3 90 0 1 0
+scale s-fan-3 s-fan-3 150 10 35
+leaf wing-3 wing-3 instanceof box
+assign-material wing-3 mat-fan
+
+#4th fan
+group fan-4 fan-4
+translate t-fan-4 t-fan-4 0 0 -75
+rotate r-fan-4 r-fan-4 90 0 1 0
+scale s-fan-4 s-fan-4 150 10 35
+leaf wing-4 wing-4 instanceof box
+assign-material wing-4 mat-fan
+
+add-child center s-axis
+add-child s-axis axis
+add-child axis fans
+
+add-child wing-1 s-fan-1
+add-child s-fan-1 t-fan-1
+add-child t-fan-1 fan-1
+add-child fan-1 fans
+
+add-child wing-2 s-fan-2
+add-child s-fan-2 t-fan-2
+add-child t-fan-2 fan-2
+add-child fan-2 fans
+
+add-child wing-3 s-fan-3
+add-child s-fan-3 r-fan-3
+add-child r-fan-3 t-fan-3
+add-child t-fan-3 fan-3
+add-child fan-3 fans
+
+add-child wing-4 s-fan-4
+add-child s-fan-4 r-fan-4
+add-child r-fan-4 t-fan-4
+add-child t-fan-4 fan-4
+add-child fan-4 fans
+
+assign-root fans
