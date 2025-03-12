@@ -1,0 +1,14 @@
+group root root
+
+translate t-drone t-drone 0 150 -120
+add-child t-drone root
+scale s-drone s-drone 0.5 0.5 0.5
+add-child s-drone t-drone
+import drone scenegraphmodels/drone.txt
+add-child drone s-drone
+
+
+import castle scenegraphmodels/castle.txt
+add-child castle root
+
+assign-root root

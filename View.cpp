@@ -133,7 +133,6 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * temp_mat;
         temp_stack.pop();
     }
-    
     //
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));

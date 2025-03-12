@@ -3,60 +3,60 @@ instance sphere models/sphere.obj
 instance box models/box.obj
 
 #material
-material head-material 
+material drone-head-material 
 ambient 1 1 0
 end-material
 
-material body-material 
+material drone-body-material 
 ambient 0 0 1
 end-material
 
-material eye-material
+material drone-eye-material
 ambient 0 1 0
 end-material
 
 group drone drone
 
-#drone body
-scale s-body s-body 100 25 50
-add-child s-body drone
-leaf body body instanceof box
-add-child body s-body 
-assign-material body body-material 
+#drone drone-body
+scale s-drone-body s-drone-body 100 25 50
+add-child s-drone-body drone
+leaf drone-body drone-body instanceof box
+add-child drone-body s-drone-body 
+assign-material drone-body drone-body-material 
 
 #drone head
-translate t-head t-head -50 0 0
-add-child t-head drone
-scale s-head s-head 10 15 40
-add-child s-head t-head
-leaf head head instanceof box
-add-child head s-head 
-assign-material head head-material 
+translate t-drone-head t-drone-head -50 0 0
+add-child t-drone-head drone
+scale s-drone-head s-drone-head 10 15 40
+add-child s-drone-head t-drone-head
+leaf drone-head drone-head instanceof box
+add-child drone-head s-drone-head 
+assign-material drone-head drone-head-material 
 
-#drone eye
-translate t-eye t-eye -52.5 0 0
-add-child t-eye drone
-scale s-eye s-eye 5 5 5
-add-child s-eye t-eye
-leaf eye eye instanceof sphere
-add-child eye s-eye 
-assign-material eye eye-material 
+#drone drone-eye
+translate t-drone-eye t-drone-eye -52.5 0 0
+add-child t-drone-eye drone
+scale s-drone-eye s-drone-eye 5 5 5
+add-child s-drone-eye t-drone-eye
+leaf drone-eye drone-eye instanceof sphere
+add-child drone-eye s-drone-eye 
+assign-material drone-eye drone-eye-material 
 
-#first wing
-rotate r-wing-1 r-wing-1 90 0 1 0
-add-child r-wing-1 drone
-translate t-wing-1 t-wing-1 -40 25 0
-add-child t-wing-1 r-wing-1
-import wing-1 scenegraphmodels/drone-wing.txt
-add-child wing-1 t-wing-1
+#first drone-wing
+rotate r-drone-wing-1 r-drone-wing-1 90 0 1 0
+add-child r-drone-wing-1 drone
+translate t-drone-wing-1 t-drone-wing-1 -40 25 0
+add-child t-drone-wing-1 r-drone-wing-1
+import drone-wing-1 scenegraphmodels/drone-wing.txt
+add-child drone-wing-1 t-drone-wing-1
 
-#second wing
-rotate r-wing-1 r-wing-1 -90 0 1 0
-add-child r-wing-1 drone
-translate t-wing-1 t-wing-1 -40 25 0
-add-child t-wing-1 r-wing-1
-import wing-1 scenegraphmodels/drone-wing.txt
-add-child wing-1 t-wing-1
+#second drone-wing
+rotate r-drone-wing-2 r-drone-wing-2 -90 0 1 0
+add-child r-drone-wing-2 drone
+translate t-drone-wing-2 t-drone-wing-2 -40 25 0
+add-child t-drone-wing-2 r-drone-wing-2
+import drone-wing-2 scenegraphmodels/drone-wing.txt
+add-child drone-wing-2 t-drone-wing-2
 
 #first leg
 translate t-leg-1 t-leg-1 46.5 -27.5 21.5
@@ -82,4 +82,106 @@ add-child t-leg-4 drone
 import leg-4 scenegraphmodels/drone-leg.txt
 add-child leg-4 t-leg-4
 
+#first propellor
+translate t-propellor-1 t-propellor-1 0 40 60
+add-child t-propellor-1 drone
+scale s-propellor-1 s-propellor-1 0.3 0.3 0.3
+add-child s-propellor-1 t-propellor-1
+import propellor-1 scenegraphmodels/propellor.txt
+add-child propellor-1 s-propellor-1
+
+#second propellor
+translate t-propellor-2 t-propellor-2 0 40 -60
+add-child t-propellor-2 drone
+scale s-propellor-2 s-propellor-1 0.3 0.3 0.3
+add-child s-propellor-2 t-propellor-2
+import propellor-2 scenegraphmodels/propellor.txt
+add-child propellor-2 s-propellor-2
+
 assign-root drone
+
+# drone
+#    - s-drone-body
+#       - drone-body
+#    - t-drone-head
+#       - s-drone-head
+#          - drone-head
+#    - t-drone-eye
+#       - s-drone-eye
+#          - drone-eye
+#    - r-drone-wing-1
+#       - t-drone-wing-1
+#          - wing
+#             - r-wing
+#                - s-wing
+#                   - stick
+#    - r-drone-wing-2
+#       - t-drone-wing-2
+#          - wing
+#             - r-wing
+#                - s-wing
+#                   - stick
+#    - t-leg-1
+#       - leg
+#          - scale
+#             - one-box
+#    - t-leg-2
+#       - leg
+#          - scale
+#             - one-box
+#    - t-leg-3
+#       - leg
+#          - scale
+#             - one-box
+#    - t-leg-4
+#       - leg
+#          - scale
+#             - one-box
+#    - t-propellor-1
+#       - s-propellor-1
+#          - fans
+#             - axis
+#                - s-axis
+#                   - center
+#             - fan-1
+#                - t-fan-1
+#                   - s-fan-1
+#                      - wing-1
+#             - fan-2
+#                - t-fan-2
+#                   - s-fan-2
+#                      - wing-2
+#             - fan-3
+#                - t-fan-3
+#                   - r-fan-3
+#                      - s-fan-3
+#                         - wing-3
+#             - fan-4
+#                - t-fan-4
+#                   - r-fan-4
+#                      - s-fan-4
+#                         - wing-4
+#    - t-propellor-2
+#       - s-propellor-1
+#          - fans
+#             - axis
+#                - s-axis
+#                   - center
+#             - fan-1
+#                - t-fan-1
+#                   - s-fan-1
+#                      - wing-1
+#             - fan-2
+#                - t-fan-2
+#                   - s-fan-2
+#                      - wing-2
+#             - fan-3
+#                - t-fan-3
+#                   - r-fan-3
+#                      - s-fan-3
+#                         - wing-3
+#             - fan-4
+#                - t-fan-4
+#                   - r-fan-4
+#                      - s-fan-4
+#                         - wing-4
