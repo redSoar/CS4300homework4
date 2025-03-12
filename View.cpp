@@ -113,6 +113,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     renderer = new sgraph::GLScenegraphRenderer(modelview,objects,shaderLocations);
     textRenderer = new sgraph::GLScenegraphTextRenderer();
     count = 0;
+    rotateAmount.push(glm::mat4(1.0f));
 }
 
 
@@ -126,7 +127,12 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     modelview.push(glm::mat4(1.0));
     modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
     // rotate by the amount that the cursor travels in the x and y coordinates
-    modelview.top() = modelview.top() * rotateAmount[1] * rotateAmount[0];
+    stack<glm::mat4> temp_stack = rotateAmount;
+    while (!temp_stack.empty()) {
+        glm::mat4 temp_mat = temp_stack.top();
+        modelview.top() = modelview.top() * temp_mat;
+        temp_stack.pop();
+    }
     
     //
     //send projection matrix to GPU    
@@ -166,8 +172,8 @@ void View::findMousePos(bool init)
     else {
         float diffx = (float)xpos - prevpos[0];
         float diffy = (float)ypos - prevpos[1];
-        rotateAmount[0] = rotateAmount[0] * glm::rotate(glm::mat4(1.0f), glm::radians(diffx), glm::vec3(0.0f, 1.0f, 0.0f));
-        rotateAmount[1] = rotateAmount[1] * glm::rotate(glm::mat4(1.0f), glm::radians(diffy), glm::vec3(1.0f, 0.0f, 0.0f));
+        rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffx), glm::vec3(0.0f, 1.0f, 0.0f)));
+        rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffy), glm::vec3(1.0f, 0.0f, 0.0f)));
         // prep for next position
         prevpos[0] = (float)xpos;
         prevpos[1] = (float)ypos;
@@ -177,8 +183,10 @@ void View::findMousePos(bool init)
 // reset the rotation
 void View::resetTrackball()
 {
-    rotateAmount[0] = glm::mat4(1.0f);
-    rotateAmount[1] = glm::mat4(1.0f);
+    while (!rotateAmount.empty()) {
+        rotateAmount.pop();
+    }
+    rotateAmount.push(glm::mat4(1.0f));
 }
 
 bool View::shouldWindowClose() {

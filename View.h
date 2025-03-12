@@ -43,7 +43,7 @@ private:
     sgraph::SGNodeVisitor *textRenderer;
     int count;
     float prevpos[2];
-    glm::mat4 rotateAmount[2] = {glm::mat4(1.0f), glm::mat4(1.0f)};
+    stack<glm::mat4> rotateAmount;
 };
 
 #endif
