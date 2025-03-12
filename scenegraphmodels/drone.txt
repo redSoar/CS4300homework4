@@ -85,16 +85,20 @@ add-child leg-4 t-leg-4
 #first propellor
 translate t-propellor-1 t-propellor-1 0 40 60
 add-child t-propellor-1 drone
+rotate r-propellor-1 r-propellor-1 0.0 0 1 0
+add-child r-propellor-1 t-propellor-1
 scale s-propellor-1 s-propellor-1 0.3 0.3 0.3
-add-child s-propellor-1 t-propellor-1
+add-child s-propellor-1 r-propellor-1
 import propellor-1 scenegraphmodels/propellor.txt
 add-child propellor-1 s-propellor-1
 
 #second propellor
 translate t-propellor-2 t-propellor-2 0 40 -60
 add-child t-propellor-2 drone
+rotate r-propellor-2 r-propellor-2 0.0 0 1 0
+add-child r-propellor-2 t-propellor-2
 scale s-propellor-2 s-propellor-1 0.3 0.3 0.3
-add-child s-propellor-2 t-propellor-2
+add-child s-propellor-2 r-propellor-2
 import propellor-2 scenegraphmodels/propellor.txt
 add-child propellor-2 s-propellor-2
 

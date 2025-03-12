@@ -45,6 +45,10 @@ namespace sgraph {
                 return angleInRadians;
             }
 
+            void changeRotation(float newAngle) {
+                this->angleInRadians = newAngle;
+            } 
+
     };
 }
 

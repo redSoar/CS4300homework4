@@ -136,7 +136,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     //
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    
+
+    float time = (float)glfwGetTime();
+
+    sgraph::RotateTransform* propellorRotationOne = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-1"));
+    (*propellorRotationOne).changeRotation(time);
+    sgraph::RotateTransform* propellorRotationTwo = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-2"));
+    (*propellorRotationTwo).changeRotation(-time);
 
     //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
