@@ -83,17 +83,17 @@ void Controller::run()
 
 void Controller::onkey(int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_R){ // 'r' or 'R'
+    if (key == GLFW_KEY_R) { // 'r' or 'R'
         //reset trackball
         view.resetTrackball();
     }
-    if (key == GLFW_KEY_S){ // 's' or 'S'
+    if (key == GLFW_KEY_S) { // 's' or 'S'
         view.decreasePropellorSpeed();
     }
-    if (key == GLFW_KEY_F){ // 'f' or 'F'
+    if (key == GLFW_KEY_F) { // 'f' or 'F'
         view.increasePropellorSpeed();
     }
-    if (key == GLFW_KEY_J){ // 'j' of 'J'
+    if (key == GLFW_KEY_J) { // 'j' of 'J'
         view.sidewaysRoll();
     }
     if (key == GLFW_KEY_MINUS) { // '-'
@@ -102,20 +102,29 @@ void Controller::onkey(int key, int scancode, int action, int mods)
     if (key == GLFW_KEY_EQUAL) { // '+'
         view.moveDroneBackward();
     }
-    if (key == GLFW_KEY_D){ // 'd' of 'D'
+    if (key == GLFW_KEY_D) { // 'd' of 'D'
         view.resetDronePosition();
     }
-    if (key == GLFW_KEY_RIGHT){ // Right arrow
+    if (key == GLFW_KEY_RIGHT) { // Right arrow
         view.moveDroneFace(RIGHT);
     }
-    if (key == GLFW_KEY_LEFT){ // Left arrow
+    if (key == GLFW_KEY_LEFT) { // Left arrow
         view.moveDroneFace(LEFT);
     }
-    if (key == GLFW_KEY_DOWN){ // Down arrow
+    if (key == GLFW_KEY_DOWN) { // Down arrow
         view.moveDroneFace(DOWN);
     }
-    if (key == GLFW_KEY_UP){ // Up arrow
+    if (key == GLFW_KEY_UP) { // Up arrow
         view.moveDroneFace(UP);
+    }
+    if (key == GLFW_KEY_1) { // 1
+        view.changeCam(1);
+    }
+    if (key == GLFW_KEY_2) { // 2
+        view.changeCam(2);
+    }
+    if (key == GLFW_KEY_3) { // 3
+        view.changeCam(3);
     }
 
 }
