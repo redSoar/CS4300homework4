@@ -122,6 +122,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     glm::vec3 rightVector = glm::cross(glm::vec3(0.0f,1.0f,0.0f), cameraVector);
     correctUp = glm::cross(cameraVector, rightVector);
 
+    cameraMode = GLOBAL;
 
 }
 
@@ -133,20 +134,32 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
+    float time = (float)glfwGetTime();  
+
     modelview.push(glm::mat4(1.0));
-    modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
-    // rotate by the amount that the cursor travels in the x and y coordinates
-    stack<glm::mat4> temp_stack = rotateAmount;
-    while (!temp_stack.empty()) {
-        glm::mat4 temp_mat = temp_stack.top();
-        modelview.top() = modelview.top() * temp_mat;
-        temp_stack.pop();
+
+    if (cameraMode == GLOBAL) {
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+        // rotate by the amount that the cursor travels in the x and y coordinates
+        stack<glm::mat4> temp_stack = rotateAmount;
+        while (!temp_stack.empty()) {
+            glm::mat4 temp_mat = temp_stack.top();
+            modelview.top() = modelview.top() * temp_mat;
+            temp_stack.pop();
+        }
     }
+    else if (cameraMode == CHOPPER) {
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 450.0f, 300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+        modelview.top() = modelview.top() * glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f,1.0f,0.0f));
+    }
+    else {
+        // put drone cam here
+    }
+    
     //
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    float time = (float)glfwGetTime();  
     float timeDiff = time - previousTime;
     previousTime = time;
 
@@ -225,24 +238,26 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 // determine the amount by which the model will rotate based on cursor movement
 void View::findMousePos(bool init)
 {
-    // get the cursor position
-    double xpos, ypos;
-    glfwGetCursorPos(window, &xpos, &ypos);
+    if (cameraMode == GLOBAL) {
+        // get the cursor position
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
 
-    /*set the initial position if instructed to do so, else calculate the distance travelled by the cursor
-      and set the amount by which the model will rotate to that distance (converted to radians within rotation matrix)*/
-    if (init) {
-        prevpos[0] = (float)xpos;
-        prevpos[1] = (float)ypos;
-    }
-    else {
-        float diffx = (float)xpos - prevpos[0];
-        float diffy = (float)ypos - prevpos[1];
-        rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffx), correctUp));
-        rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffy), glm::vec3(1.0f, 0.0f, 0.0f)));
-        // prep for next position
-        prevpos[0] = (float)xpos;
-        prevpos[1] = (float)ypos;
+        /*set the initial position if instructed to do so, else calculate the distance travelled by the cursor
+        and set the amount by which the model will rotate to that distance (converted to radians within rotation matrix)*/
+        if (init) {
+            prevpos[0] = (float)xpos;
+            prevpos[1] = (float)ypos;
+        }
+        else {
+            float diffx = (float)xpos - prevpos[0];
+            float diffy = (float)ypos - prevpos[1];
+            rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffx), correctUp));
+            rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffy), glm::vec3(1.0f, 0.0f, 0.0f)));
+            // prep for next position
+            prevpos[0] = (float)xpos;
+            prevpos[1] = (float)ypos;
+        }
     }
 }
 
@@ -296,6 +311,15 @@ void View::moveDroneFace(int direction){
 
 void View::resetDronePosition() {
     dronePosition = 0.0f;
+}
+
+void View::changeCam(int cam) {
+    if (cam == 1) {
+        cameraMode = GLOBAL;
+    }
+    else if (cam == 2) {
+        cameraMode = CHOPPER;
+    }
 }
 
 bool View::shouldWindowClose() {

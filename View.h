@@ -21,6 +21,8 @@ using namespace std;
 
 class View
 {
+    typedef enum {GLOBAL, CHOPPER, FPS} TypeOfCamera;
+
 public:
     View();
     ~View();
@@ -37,6 +39,7 @@ public:
     void moveDroneBackward();
     void moveDroneFace(int direction);
     void resetDronePosition();
+    void changeCam(int cam);
 
 private: 
 
@@ -59,6 +62,7 @@ private:
     float dronePosition = 0.0f;
     float droneFaceLR = 0.0f;
     float droneFaceUD = 0.0f;
+    TypeOfCamera cameraMode;
 };
 
 #endif

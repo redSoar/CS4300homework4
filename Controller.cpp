@@ -83,6 +83,7 @@ void Controller::run()
 
 void Controller::onkey(int key, int scancode, int action, int mods)
 {
+<<<<<<< HEAD
     if (action == GLFW_PRESS) {  
         if (key == GLFW_KEY_R){ // 'r' or 'R'
             //reset trackball
@@ -101,18 +102,19 @@ void Controller::onkey(int key, int scancode, int action, int mods)
             view.resetDronePosition();
         }
 
+=======
+    if (key == GLFW_KEY_R) { // 'r' or 'R'
+        //reset trackball
+        view.resetTrackball();
     }
-    if (key == GLFW_KEY_RIGHT){ // Right arrow
-        view.moveDroneFace(RIGHT);
+    if (key == GLFW_KEY_S) { // 's' or 'S'
+        view.decreasePropellorSpeed();
     }
-    if (key == GLFW_KEY_LEFT){ // Left arrow
-        view.moveDroneFace(LEFT);
+    if (key == GLFW_KEY_F) { // 'f' or 'F'
+        view.increasePropellorSpeed();
     }
-    if (key == GLFW_KEY_DOWN){ // Down arrow
-        view.moveDroneFace(DOWN);
-    }
-    if (key == GLFW_KEY_UP){ // Up arrow
-        view.moveDroneFace(UP);
+    if (key == GLFW_KEY_J) { // 'j' of 'J'
+        view.sidewaysRoll();
     }
     if (key == GLFW_KEY_MINUS) { // '-'
         view.moveDroneForward();
@@ -120,6 +122,41 @@ void Controller::onkey(int key, int scancode, int action, int mods)
     if (key == GLFW_KEY_EQUAL) { // '+'
         view.moveDroneBackward();
     }
+    if (key == GLFW_KEY_D) { // 'd' of 'D'
+        view.resetDronePosition();
+>>>>>>> c37e24722fe0d5d5cdabecdb33ac9d3182fe651f
+    }
+    if (key == GLFW_KEY_RIGHT) { // Right arrow
+        view.moveDroneFace(RIGHT);
+    }
+    if (key == GLFW_KEY_LEFT) { // Left arrow
+        view.moveDroneFace(LEFT);
+    }
+    if (key == GLFW_KEY_DOWN) { // Down arrow
+        view.moveDroneFace(DOWN);
+    }
+    if (key == GLFW_KEY_UP) { // Up arrow
+        view.moveDroneFace(UP);
+    }
+<<<<<<< HEAD
+    if (key == GLFW_KEY_MINUS) { // '-'
+        view.moveDroneForward();
+    } 
+    if (key == GLFW_KEY_EQUAL) { // '+'
+        view.moveDroneBackward();
+    }
+=======
+    if (key == GLFW_KEY_1) { // 1
+        view.changeCam(1);
+    }
+    if (key == GLFW_KEY_2) { // 2
+        view.changeCam(2);
+    }
+    if (key == GLFW_KEY_3) { // 3
+        view.changeCam(3);
+    }
+
+>>>>>>> c37e24722fe0d5d5cdabecdb33ac9d3182fe651f
 }
 
 void Controller::onMouse(int button, int action, int mods)
