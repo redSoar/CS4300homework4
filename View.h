@@ -33,6 +33,10 @@ public:
     void decreasePropellorSpeed();
     void increasePropellorSpeed();
     void sidewaysRoll();
+    void moveDroneForward();
+    void moveDroneBackward();
+    void moveDroneFace(int direction);
+    void resetDronePosition();
 
 private: 
 
@@ -52,6 +56,9 @@ private:
     float previousTime;
     bool rolling = false;
     float rollingTotal = 0.0f;
+    float dronePosition = 0.0f;
+    float droneFaceLR = 0.0f;
+    float droneFaceUD = 0.0f;
 };
 
 #endif

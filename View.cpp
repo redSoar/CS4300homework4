@@ -155,7 +155,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
             rolling = false;
             rollingTotal = 0;
         }
-        sgraph::RotateTransform* droneRot = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-drone"));
+        sgraph::RotateTransform* droneRot = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("rx-drone"));
         droneRot->changeRotation(timeDiff*2);
     }
     
@@ -163,6 +163,16 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     propellorRotationOne->changeRotation(timeDiff * speed);
     sgraph::RotateTransform* propellorRotationTwo = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-2"));
     propellorRotationTwo->changeRotation(timeDiff * speed);
+
+    sgraph::TranslateTransform* moveDrone = dynamic_cast<sgraph::TranslateTransform*>(scenegraph->getRoot()->getNode("move-drone"));
+    moveDrone->moveXaxis(dronePosition);
+
+    sgraph::RotateTransform* moveDroneFaceLR = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("ry-drone"));
+    moveDroneFaceLR->changeRotation(droneFaceLR);
+    droneFaceLR = 0.0f;
+    sgraph::RotateTransform* moveDroneFaceUD = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("rz-drone"));
+    moveDroneFaceUD->changeRotation(droneFaceUD);
+    droneFaceUD = 0.0f;
 
     //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
@@ -220,13 +230,42 @@ void View::increasePropellorSpeed() {
 }
 
 void View::decreasePropellorSpeed() {
-    if(speed > 0.1f) {
+    if(speed > 0.2f) {
         speed -= 0.1f;
     }
 }
 
 void View::sidewaysRoll() {
     rolling = true;
+}
+
+void View::moveDroneBackward() {
+    dronePosition -= 2.0f * speed;
+}
+
+void View::moveDroneForward() {
+    dronePosition += 2.0f * speed;
+}
+
+void View::moveDroneFace(int direction){
+    switch(direction){
+        case 0: // RIGHT
+            droneFaceLR -= 0.1f;
+            break;
+        case 1: // LEFT
+            droneFaceLR += 0.1f;
+            break;
+        case 2: // DOWN
+            droneFaceUD -= 0.1f;
+            break;
+        case 3: // UP
+            droneFaceUD += 0.1f;
+            break;
+    }
+}
+
+void View::resetDronePosition() {
+    dronePosition = 0.0f;
 }
 
 bool View::shouldWindowClose() {

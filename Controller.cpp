@@ -12,6 +12,11 @@ using namespace std;
 #include "sgraph/ScenegraphExporter.h"
 #include "sgraph/ScenegraphImporter.h"
 
+int RIGHT = 0;
+int LEFT = 1;
+int DOWN = 2;
+int UP = 3;
+
 Controller::Controller(Model& m,View& v) {
     model = m;
     view = v;
@@ -91,6 +96,28 @@ void Controller::onkey(int key, int scancode, int action, int mods)
     if (key == GLFW_KEY_J){ // 'j' of 'J'
         view.sidewaysRoll();
     }
+    if (key == GLFW_KEY_MINUS) { // '-'
+        view.moveDroneForward();
+    } 
+    if (key == GLFW_KEY_EQUAL) { // '+'
+        view.moveDroneBackward();
+    }
+    if (key == GLFW_KEY_D){ // 'd' of 'D'
+        view.resetDronePosition();
+    }
+    if (key == GLFW_KEY_RIGHT){ // Right arrow
+        view.moveDroneFace(RIGHT);
+    }
+    if (key == GLFW_KEY_LEFT){ // Left arrow
+        view.moveDroneFace(LEFT);
+    }
+    if (key == GLFW_KEY_DOWN){ // Down arrow
+        view.moveDroneFace(DOWN);
+    }
+    if (key == GLFW_KEY_UP){ // Up arrow
+        view.moveDroneFace(UP);
+    }
+
 }
 
 void Controller::onMouse(int button, int action, int mods)

@@ -39,7 +39,13 @@ namespace sgraph {
 
             glm::vec3 getTranslate() {
             return glm::vec3(tx,ty,tz);
-        }
+            }
+
+            void moveXaxis(float newXaxis) {
+                this->tx = newXaxis;
+                glm::mat4 transform = glm::translate(glm::mat4(1.0),glm::vec3(tx,ty,tz));
+                setTransform(transform);
+            }
 
     };
 }
