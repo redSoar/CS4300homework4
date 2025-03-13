@@ -117,6 +117,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     rotateAmount.push(glm::mat4(1.0f));
     speed = 1.2f;
     previousTime = 0.0f;
+    totalQuaternion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 
     glm::vec3 cameraVector = glm::vec3(0.0f,300.0f,300.0f) - glm::vec3(0.0f,0.0f,0.0f);
     glm::vec3 rightVector = glm::cross(glm::vec3(0.0f,1.0f,0.0f), cameraVector);
@@ -155,13 +156,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         // put drone cam here
     }
     
-    //
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     float timeDiff = time - previousTime;
     previousTime = time;
 
+    // Roll the drone until it makes a complete loop (360 degree)
     if (rolling) {
         rollingTotal += timeDiff*2;
         if (rollingTotal >= 6.28319f) {
@@ -173,48 +174,42 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
     
     sgraph::RotateTransform* propellorRotationOne = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-1"));
-    propellorRotationOne->changeRotation(timeDiff * speed);
     sgraph::RotateTransform* propellorRotationTwo = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-2"));
-    propellorRotationTwo->changeRotation(timeDiff * speed);
-
-    // ---------------DEPRICATED-----------------
-    // sgraph::RotateTransform* moveDroneFaceLR = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("ry-drone"));
-    // moveDroneFaceLR->changeRotation(droneFaceLR);
-    // droneTotalLR += droneFaceLR;
-    // droneFaceLR = 0.0f;
-    // sgraph::RotateTransform* moveDroneFaceUD = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("rz-drone"));
-    // moveDroneFaceUD->changeRotation(droneFaceUD);
-    // droneTotalUD += droneFaceUD;
-    // droneFaceUD = 0.0f;
-
     sgraph::RotateTransform* rotateDrone = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-drone"));
-    // rotateDrone->setRotationAxis(glm::axis(totalQuaternion));
-    // rotateDrone->setRotation(glm::angle(totalQuaternion));
-
     sgraph::TranslateTransform* moveDrone = dynamic_cast<sgraph::TranslateTransform*>(scenegraph->getRoot()->getNode("t-drone"));
-    // moveDrone->moveXaxis(dronePosition);
+
+    // Set default drone position
     if(count < 1){
         droneOriginalPos = moveDrone->getTranslate();
     }
 
-    glm::mat4 rTotal = glm::rotate(glm::mat4(1.0f), rotateDrone->getAngleInRadians(), rotateDrone->getRotationAxis());
-    glm::vec4 forwardVector(1.0f, 0.0f, 0.0f, 1.0f);
-    glm::vec4 newForwardVector = rTotal * forwardVector;
-    moveDrone->moveForwardBackward(glm::vec3(newForwardVector.x, newForwardVector.y, newForwardVector.z) * dronePosition);
-    dronePosition = 0.0f;
+    //Propellor rotation
+    propellorRotationOne->changeRotation(timeDiff * speed);
+    propellorRotationTwo->changeRotation(timeDiff * speed);
+
+    //Drone rotation
+    rotateDrone->setRotationAxis(glm::axis(totalQuaternion));
+    rotateDrone->setRotation(glm::angle(totalQuaternion));
+
+    cout << "Rotation : " << rotateDrone->getAngleInRadians() << endl;
+    cout << "Rotate Axis X : " << rotateDrone->getRotationAxis().x << endl;
+    cout << "Rotate Axis Y : " << rotateDrone->getRotationAxis().y << endl;
+    cout << "Rotate Axis Z : " << rotateDrone->getRotationAxis().z << endl;
+
+    //Drone movement to relative forward direction
+    glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), rotateDrone->getAngleInRadians(), rotateDrone->getRotationAxis());
+    glm::vec4 forwardVector(1.0f, 0.0f, 0.0f, 1.0f); // Default forward vector
+    glm::vec4 newForwardVector = rotation * forwardVector;
+    moveDrone->moveForwardBackward(glm::vec3(newForwardVector.x, newForwardVector.y, newForwardVector.z) * droneMovement);
+    droneMovement = 0.0f;
+
+    //Drone position/rotation reset
     if(resetDrone){
         moveDrone->setTranslate(droneOriginalPos);
         rotateDrone->resetAngle();
+        totalQuaternion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         resetDrone = false;
     }
-
-    // ---------------DEPRICATED-----------------
-    // glm::vec3 forwardVector = glm::normalize(glm::vec3(
-    //     cos(moveDroneFaceUD->getAngleInRadians()) * sin(moveDroneFaceLR->getAngleInRadians()), 
-    //     -sin(moveDroneFaceUD->getAngleInRadians()), 
-    //     cos(moveDroneFaceUD->getAngleInRadians()) * cos(moveDroneFaceLR->getAngleInRadians())));
-    // moveDrone->moveForwardBackward(forwardVector * dronePosition);
-    
 
     //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
@@ -223,7 +218,6 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         scenegraph->getRoot()->accept(textRenderer);
         count++;
     }
-    // cout << timeDiff << endl;
     
     modelview.pop();
     glFlush();
@@ -231,7 +225,6 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     
     glfwSwapBuffers(window);
     glfwPollEvents();
-
 }
 
 // determine the amount by which the model will rotate based on cursor movement
@@ -269,61 +262,68 @@ void View::resetTrackball()
     rotateAmount.push(glm::mat4(1.0f));
 }
 
+// increase drone propellor speed
 void View::increasePropellorSpeed() {
     speed += 1.0f;
 }
 
+// decrease drone propellor speed
 void View::decreasePropellorSpeed() {
     if(speed > 1.1f) {
         speed -= 1.0f;
     }
 }
 
+// trigger drone sideways rolling
 void View::sidewaysRoll() {
     rolling = true;
 }
 
+// move drone backward
 void View::moveDroneBackward() {
-    dronePosition -= 0.5f * speed;
+    droneMovement = -0.5f * speed;
 }
 
+// move drone forward
 void View::moveDroneForward() {
-    dronePosition += 0.5f * speed;
+    droneMovement = 0.5f * speed;
 }
 
+// Accumulate drone rotation
 void View::moveDroneFace(int direction){
     glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
     glm::vec3 zAxis(0.0f, 0.0f, 1.0f);
     switch(direction){
         case 0: // RIGHT
-            droneFaceLR -= 0.1f;
             totalQuaternion *= glm::angleAxis(-0.1f, yAxis);
             break;
         case 1: // LEFT
-            droneFaceLR += 0.1f;
             totalQuaternion *= glm::angleAxis(0.1f, yAxis);
             break;
         case 2: // DOWN
-            droneFaceUD += 0.1f;
             totalQuaternion *= glm::angleAxis(0.1f, zAxis);
             break;
         case 3: // UP
-            droneFaceUD -= 0.1f;
             totalQuaternion *= glm::angleAxis(-0.1f, zAxis);
             break;
     }
 }
 
+// Reset drone position and rotation
 void View::resetDronePosition() {
     resetDrone = true;
 }
 
+// Change camera view option
 void View::changeCam(int cam) {
     if (cam == 1) {
         cameraMode = GLOBAL;
     }
     else if (cam == 2) {
         cameraMode = CHOPPER;
+    }
+    else if (cam == 3) {
+        cameraMode = FPS;
     }
 }
 

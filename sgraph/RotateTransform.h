@@ -45,22 +45,28 @@ namespace sgraph {
                 return angleInRadians;
             }
 
+            // Reset rotation angle to 0
             void resetAngle() {
-                this->angleInRadians = 0;
+                this->angleInRadians = 0.0f;
+                glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
+                setTransform(transform);
             }
-
+            
+            // Rotate this transformation by the given angle
             void changeRotation(float newAngle) {
                 this->angleInRadians += newAngle;
                 glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
                 setTransform(transform);
             } 
 
+            // Set rotation axis to given axis
             void setRotationAxis(glm::vec3 newAxis) {
                 this->axis = newAxis;
                 glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
                 setTransform(transform);
             }
 
+            // Set rotation to given angle
             void setRotation(float angle) {
                 this->angleInRadians = angle;
                 glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);

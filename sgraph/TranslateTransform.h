@@ -38,9 +38,10 @@ namespace sgraph {
             }
 
             glm::vec3 getTranslate() {
-            return glm::vec3(this->tx,this->ty,this->tz);
+            return glm::vec3(tx,ty,tz);
             }
 
+            // Set this translate tranformation to given translate
             void setTranslate(glm::vec3 newTranslate) {
                 this->tx = newTranslate.x;
                 this->ty = newTranslate.y;
@@ -49,12 +50,7 @@ namespace sgraph {
                 setTransform(transform);
             }
 
-            void moveXaxis(float newXaxis) {
-                this->tx += newXaxis;
-                glm::mat4 transform = glm::translate(glm::mat4(1.0),glm::vec3(tx,ty,tz));
-                setTransform(transform);
-            }
-            
+            // Add given translate to this translate
             void moveForwardBackward(glm::vec3 forwardVector){
                 this->tx += forwardVector.x;
                 this->ty += forwardVector.y;

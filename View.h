@@ -60,15 +60,13 @@ private:
     float previousTime;
     bool rolling = false;
     float rollingTotal = 0.0f;
-    float dronePosition = 0.0f;
-    float droneFaceLR = 0.0f;
-    float droneFaceUD = 0.0f;
+    float droneMovement = 0.0f;
     TypeOfCamera cameraMode;
     glm::vec3 droneOriginalPos = glm::vec3(0.0f, 0.0f, 0.0f);
     bool resetDrone = false;
     float droneTotalLR = 0.0f;
     float droneTotalUD = 0.0f;
-    glm::quat totalQuaternion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+    glm::quat totalQuaternion;
 };
 
 #endif
