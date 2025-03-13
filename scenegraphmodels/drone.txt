@@ -106,16 +106,9 @@ add-child propellor-2 s-propellor-2
 
 
 
-
-rotate ry-drone ry-drone 0 0 1 0
-add-child ry-drone full-drone
-
-rotate rz-drone rz-drone 0 0 0 1
-add-child rz-drone ry-drone
-
-rotate rx-drone rx-drone 0 1 0 0
-add-child drone rx-drone
-add-child rx-drone rz-drone
+rotate r-drone r-drone 0 1 0 0
+add-child r-drone full-drone
+add-child drone r-drone
 
 assign-root full-drone
 

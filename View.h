@@ -14,6 +14,7 @@
 #include "VertexAttrib.h"
 #include "Callbacks.h"
 #include "sgraph/IScenegraph.h"
+#include <glm/gtc/quaternion.hpp>
 
 #include <stack>
 using namespace std;
@@ -63,10 +64,11 @@ private:
     float droneFaceLR = 0.0f;
     float droneFaceUD = 0.0f;
     TypeOfCamera cameraMode;
-    glm::vec3 droneOriginalPos;
+    glm::vec3 droneOriginalPos = glm::vec3(0.0f, 0.0f, 0.0f);
     bool resetDrone = false;
     float droneTotalLR = 0.0f;
     float droneTotalUD = 0.0f;
+    glm::quat totalQuaternion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 };
 
 #endif

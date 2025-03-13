@@ -55,6 +55,18 @@ namespace sgraph {
                 setTransform(transform);
             } 
 
+            void setRotationAxis(glm::vec3 newAxis) {
+                this->axis = newAxis;
+                glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
+                setTransform(transform);
+            }
+
+            void setRotation(float angle) {
+                this->angleInRadians = angle;
+                glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
+                setTransform(transform);
+            }
+
     };
 }
 

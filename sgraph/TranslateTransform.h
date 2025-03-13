@@ -38,7 +38,7 @@ namespace sgraph {
             }
 
             glm::vec3 getTranslate() {
-            return glm::vec3(tx,ty,tz);
+            return glm::vec3(this->tx,this->ty,this->tz);
             }
 
             void setTranslate(glm::vec3 newTranslate) {
