@@ -47,6 +47,8 @@ namespace sgraph {
 
             void changeRotation(float newAngle) {
                 this->angleInRadians = newAngle;
+                glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
+                setTransform(transform);
             } 
 
     };

@@ -114,6 +114,13 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     textRenderer = new sgraph::GLScenegraphTextRenderer();
     count = 0;
     rotateAmount.push(glm::mat4(1.0f));
+    speed = 1.0f;
+
+    glm::vec3 cameraVector = glm::vec3(0.0f,300.0f,300.0f) - glm::vec3(0.0f,0.0f,0.0f);
+    glm::vec3 rightVector = glm::cross(glm::vec3(0.0f,1.0f,0.0f), cameraVector);
+    correctUp = glm::cross(cameraVector, rightVector);
+
+
 }
 
 
@@ -137,12 +144,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    float time = (float)glfwGetTime();
-
+    float time = (float)glfwGetTime() * speed;
+    // time 
+    
     sgraph::RotateTransform* propellorRotationOne = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-1"));
-    (*propellorRotationOne).changeRotation(time);
+    propellorRotationOne->changeRotation(time);
     sgraph::RotateTransform* propellorRotationTwo = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-2"));
-    (*propellorRotationTwo).changeRotation(-time);
+    propellorRotationTwo->changeRotation(-time);
 
     //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
@@ -151,6 +159,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         scenegraph->getRoot()->accept(textRenderer);
         count++;
     }
+    cout << (float)glfwGetTime() << endl;
     
     modelview.pop();
     glFlush();
@@ -177,7 +186,7 @@ void View::findMousePos(bool init)
     else {
         float diffx = (float)xpos - prevpos[0];
         float diffy = (float)ypos - prevpos[1];
-        rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffx), glm::vec3(0.0f, 1.0f, 0.0f)));
+        rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffx), correctUp));
         rotateAmount.push(glm::rotate(glm::mat4(1.0f), glm::radians(diffy), glm::vec3(1.0f, 0.0f, 0.0f)));
         // prep for next position
         prevpos[0] = (float)xpos;
@@ -192,6 +201,16 @@ void View::resetTrackball()
         rotateAmount.pop();
     }
     rotateAmount.push(glm::mat4(1.0f));
+}
+
+void View::increasePropellorSpeed() {
+    speed += 0.1f;
+}
+
+void View::decreasePropellorSpeed() {
+    if(speed > 0.1f) {
+        speed -= 0.1f;
+    }
 }
 
 bool View::shouldWindowClose() {

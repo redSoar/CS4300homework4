@@ -14,7 +14,7 @@ end-material
 #material
 material mat-fan
 emission 0 0 0
-ambient 0 0.3 0
+ambient 0.3 0.3 0
 diffuse 1 0 0
 specular 1 0 0
 shininess 0

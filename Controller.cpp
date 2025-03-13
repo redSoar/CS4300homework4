@@ -82,6 +82,12 @@ void Controller::onkey(int key, int scancode, int action, int mods)
         //reset trackball
         view.resetTrackball();
     }
+    if (key == GLFW_KEY_S){ // 's' or 'S'
+        view.decreasePropellorSpeed();
+    }
+    if (key == GLFW_KEY_F){ // 'f' or 'F'
+        view.increasePropellorSpeed();
+    }
 }
 
 void Controller::onMouse(int button, int action, int mods)

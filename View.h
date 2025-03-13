@@ -30,6 +30,9 @@ public:
     void closeWindow();
     void findMousePos(bool init);
     void resetTrackball();
+    void decreasePropellorSpeed();
+    void increasePropellorSpeed();
+
 
 private: 
 
@@ -44,6 +47,8 @@ private:
     int count;
     float prevpos[2];
     stack<glm::mat4> rotateAmount;
+    glm::vec3 correctUp;
+    float speed;
 };
 
 #endif
