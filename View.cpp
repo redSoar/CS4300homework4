@@ -202,7 +202,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     moveDrone->moveForwardBackward(glm::vec3(newForwardVector.x, newForwardVector.y, newForwardVector.z) * dronePosition);
     dronePosition = 0.0f;
     if(resetDrone){
-        // moveDrone->setTranslate(droneOriginalPos);
+        moveDrone->setTranslate(droneOriginalPos);
         moveDroneFaceLR->resetAngle();
         moveDroneFaceUD->resetAngle();
         resetDrone = false;

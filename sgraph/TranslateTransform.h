@@ -42,7 +42,10 @@ namespace sgraph {
             }
 
             void setTranslate(glm::vec3 newTranslate) {
-                glm::mat4 transform = glm::translate(glm::mat4(1.0), newTranslate);
+                this->tx = newTranslate.x;
+                this->ty = newTranslate.y;
+                this->tz = newTranslate.z;
+                glm::mat4 transform = glm::translate(glm::mat4(1.0), glm::vec3(tx,ty,tz));
                 setTransform(transform);
             }
 
