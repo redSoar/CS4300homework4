@@ -49,6 +49,7 @@ private:
     stack<glm::mat4> rotateAmount;
     glm::vec3 correctUp;
     float speed;
+    float previousTime;
 };
 
 #endif

@@ -115,6 +115,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     count = 0;
     rotateAmount.push(glm::mat4(1.0f));
     speed = 1.0f;
+    previousTime = 0.0f;
 
     glm::vec3 cameraVector = glm::vec3(0.0f,300.0f,300.0f) - glm::vec3(0.0f,0.0f,0.0f);
     glm::vec3 rightVector = glm::cross(glm::vec3(0.0f,1.0f,0.0f), cameraVector);
@@ -144,13 +145,15 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    float time = (float)glfwGetTime() * speed;
+    float time = (float)glfwGetTime(); 
     // time 
+    float timeDiff = time - previousTime;
+    previousTime = time;
     
     sgraph::RotateTransform* propellorRotationOne = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-1"));
-    propellorRotationOne->changeRotation(time);
+    propellorRotationOne->changeRotation(timeDiff * speed);
     sgraph::RotateTransform* propellorRotationTwo = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-2"));
-    propellorRotationTwo->changeRotation(-time);
+    propellorRotationTwo->changeRotation(timeDiff * speed);
 
     //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
@@ -159,7 +162,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         scenegraph->getRoot()->accept(textRenderer);
         count++;
     }
-    cout << (float)glfwGetTime() << endl;
+    // cout << timeDiff << endl;
     
     modelview.pop();
     glFlush();
