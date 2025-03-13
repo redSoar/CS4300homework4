@@ -135,30 +135,6 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     glEnable(GL_DEPTH_TEST);
 
     float time = (float)glfwGetTime();  
-
-    modelview.push(glm::mat4(1.0));
-
-    if (cameraMode == GLOBAL) {
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
-        // rotate by the amount that the cursor travels in the x and y coordinates
-        stack<glm::mat4> temp_stack = rotateAmount;
-        while (!temp_stack.empty()) {
-            glm::mat4 temp_mat = temp_stack.top();
-            modelview.top() = modelview.top() * temp_mat;
-            temp_stack.pop();
-        }
-    }
-    else if (cameraMode == CHOPPER) {
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 450.0f, 300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
-        modelview.top() = modelview.top() * glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f,1.0f,0.0f));
-    }
-    else {
-        // put drone cam here
-    }
-    
-    //send projection matrix to GPU    
-    glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
     float timeDiff = time - previousTime;
     previousTime = time;
 
@@ -210,6 +186,32 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         totalQuaternion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         resetDrone = false;
     }
+
+    modelview.push(glm::mat4(1.0));
+
+    if (cameraMode == GLOBAL) {
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+        // rotate by the amount that the cursor travels in the x and y coordinates
+        stack<glm::mat4> temp_stack = rotateAmount;
+        while (!temp_stack.empty()) {
+            glm::mat4 temp_mat = temp_stack.top();
+            modelview.top() = modelview.top() * temp_mat;
+            temp_stack.pop();
+        }
+    }
+    else if (cameraMode == CHOPPER) {
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 450.0f, 300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+        modelview.top() = modelview.top() * glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f,1.0f,0.0f));
+    }
+    else {
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(25.0f,150.0f,-120.0f),glm::vec3(500.0f,150.0f,-120.0f),glm::vec3(0.0f,1.0f,0.0f));
+        modelview.top() = modelview.top() * glm::inverse(glm::translate(glm::mat4(1.0), moveDrone->getTranslate()));
+        modelview.top() = modelview.top() * rotation;
+        modelview.top() = modelview.top() * glm::translate(glm::mat4(1.0), moveDrone->getTranslate());
+    }
+    
+    //send projection matrix to GPU    
+    glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
