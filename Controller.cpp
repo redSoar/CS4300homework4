@@ -88,6 +88,9 @@ void Controller::onkey(int key, int scancode, int action, int mods)
     if (key == GLFW_KEY_F){ // 'f' or 'F'
         view.increasePropellorSpeed();
     }
+    if (key == GLFW_KEY_J){ // 'j' of 'J'
+        view.sidewaysRoll();
+    }
 }
 
 void Controller::onMouse(int button, int action, int mods)

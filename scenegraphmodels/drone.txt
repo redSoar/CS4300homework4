@@ -15,6 +15,7 @@ material drone-eye-material
 ambient 0 1 0
 end-material
 
+group full-drone full-drone
 group drone drone
 
 #drone drone-body
@@ -102,7 +103,11 @@ add-child s-propellor-2 r-propellor-2
 import propellor-2 scenegraphmodels/propellor.txt
 add-child propellor-2 s-propellor-2
 
-assign-root drone
+rotate r-drone r-drone 0 1 0 0
+add-child drone r-drone
+add-child r-drone full-drone
+
+assign-root full-drone
 
 # drone
 #    - s-drone-body

@@ -32,7 +32,7 @@ public:
     void resetTrackball();
     void decreasePropellorSpeed();
     void increasePropellorSpeed();
-
+    void sidewaysRoll();
 
 private: 
 
@@ -50,6 +50,8 @@ private:
     glm::vec3 correctUp;
     float speed;
     float previousTime;
+    bool rolling = false;
+    float rollingTotal = 0.0f;
 };
 
 #endif

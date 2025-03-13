@@ -145,10 +145,19 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    float time = (float)glfwGetTime(); 
-    // time 
+    float time = (float)glfwGetTime();  
     float timeDiff = time - previousTime;
     previousTime = time;
+
+    if (rolling) {
+        rollingTotal += timeDiff*2;
+        if (rollingTotal >= 6.28319f) {
+            rolling = false;
+            rollingTotal = 0;
+        }
+        sgraph::RotateTransform* droneRot = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-drone"));
+        droneRot->changeRotation(timeDiff*2);
+    }
     
     sgraph::RotateTransform* propellorRotationOne = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-1"));
     propellorRotationOne->changeRotation(timeDiff * speed);
@@ -214,6 +223,10 @@ void View::decreasePropellorSpeed() {
     if(speed > 0.1f) {
         speed -= 0.1f;
     }
+}
+
+void View::sidewaysRoll() {
+    rolling = true;
 }
 
 bool View::shouldWindowClose() {
