@@ -63,6 +63,10 @@ private:
     float droneFaceLR = 0.0f;
     float droneFaceUD = 0.0f;
     TypeOfCamera cameraMode;
+    glm::vec3 droneOriginalPos;
+    bool resetDrone = false;
+    float droneTotalLR = 0.0f;
+    float droneTotalUD = 0.0f;
 };
 
 #endif

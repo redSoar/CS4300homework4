@@ -128,7 +128,6 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
 
 
 void View::display(sgraph::IScenegraph *scenegraph) {
-    
     program.enable();
     glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
@@ -178,15 +177,20 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     sgraph::RotateTransform* propellorRotationTwo = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("r-propellor-2"));
     propellorRotationTwo->changeRotation(timeDiff * speed);
 
-    sgraph::TranslateTransform* moveDrone = dynamic_cast<sgraph::TranslateTransform*>(scenegraph->getRoot()->getNode("t-drone"));
-    // moveDrone->moveXaxis(dronePosition);
-
     sgraph::RotateTransform* moveDroneFaceLR = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("ry-drone"));
     moveDroneFaceLR->changeRotation(droneFaceLR);
+    droneTotalLR += droneFaceLR;
     droneFaceLR = 0.0f;
     sgraph::RotateTransform* moveDroneFaceUD = dynamic_cast<sgraph::RotateTransform*>(scenegraph->getRoot()->getNode("rz-drone"));
     moveDroneFaceUD->changeRotation(droneFaceUD);
+    droneTotalUD += droneFaceUD;
     droneFaceUD = 0.0f;
+
+    sgraph::TranslateTransform* moveDrone = dynamic_cast<sgraph::TranslateTransform*>(scenegraph->getRoot()->getNode("t-drone"));
+    // moveDrone->moveXaxis(dronePosition);
+    if(count < 1){
+        droneOriginalPos = moveDrone->getTranslate();
+    }
 
     float yRotation = moveDroneFaceLR->getAngleInRadians();
     float zRotation = moveDroneFaceUD->getAngleInRadians();
@@ -196,7 +200,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     glm::vec4 forwardVector(1.0f, 0.0f, 0.0f, 1.0f);
     glm::vec4 newForwardVector = rTotal * forwardVector;
     moveDrone->moveForwardBackward(glm::vec3(newForwardVector.x, newForwardVector.y, newForwardVector.z) * dronePosition);
-    dronePosition = 0.f;
+    dronePosition = 0.0f;
+    if(resetDrone){
+        // moveDrone->setTranslate(droneOriginalPos);
+        moveDroneFaceLR->resetAngle();
+        moveDroneFaceUD->resetAngle();
+        resetDrone = false;
+    }
 
 
     // glm::vec3 forwardVector = glm::normalize(glm::vec3(
@@ -310,7 +320,7 @@ void View::moveDroneFace(int direction){
 }
 
 void View::resetDronePosition() {
-    dronePosition = 0.0f;
+    resetDrone = true;
 }
 
 void View::changeCam(int cam) {
