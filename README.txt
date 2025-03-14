@@ -7,8 +7,10 @@ Implemented Features:
   'd' or 'D'
 - We have implemented the global and chopper cameras, as well as the key codes '1' and '2' to switch between them. We decided to have the trackball
   only be usable when the global camera is active.
+
+Incomplete(ish) Features:
 - The drone camera is mapped to the key code '3'. It is placed on top of the drone, so the user will still be able to see a bit of the drone
-  on the bottom side of the window.
+  on the bottom side of the window. The camera is facing out of behind the drone, so the controls are inverted when using the FPS Camera.
 
 Work Split:
 - Everything was done on call together; we collaborated on every aspect of the program that we added or created.
