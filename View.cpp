@@ -167,10 +167,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     rotateDrone->setRotationAxis(glm::axis(totalQuaternion));
     rotateDrone->setRotation(glm::angle(totalQuaternion));
 
-    cout << "Rotation : " << rotateDrone->getAngleInRadians() << endl;
-    cout << "Rotate Axis X : " << rotateDrone->getRotationAxis().x << endl;
-    cout << "Rotate Axis Y : " << rotateDrone->getRotationAxis().y << endl;
-    cout << "Rotate Axis Z : " << rotateDrone->getRotationAxis().z << endl;
+    // cout << "Rotation : " << rotateDrone->getAngleInRadians() << endl;
+    // cout << "Rotate Axis X : " << rotateDrone->getRotationAxis().x << endl;
+    // cout << "Rotate Axis Y : " << rotateDrone->getRotationAxis().y << endl;
+    // cout << "Rotate Axis Z : " << rotateDrone->getRotationAxis().z << endl;
 
     //Drone movement to relative forward direction
     glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), rotateDrone->getAngleInRadians(), rotateDrone->getRotationAxis());
@@ -204,10 +204,12 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f,1.0f,0.0f));
     }
     else {
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(25.0f,150.0f,-120.0f),glm::vec3(500.0f,150.0f,-120.0f),glm::vec3(0.0f,1.0f,0.0f));
-        modelview.top() = modelview.top() * glm::inverse(glm::translate(glm::mat4(1.0), moveDrone->getTranslate()));
-        modelview.top() = modelview.top() * rotation;
-        modelview.top() = modelview.top() * glm::translate(glm::mat4(1.0), moveDrone->getTranslate());
+        glm::vec3 dronePos = moveDrone->getTranslate();
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(dronePos.x,dronePos.y + 10.0f,dronePos.z),glm::vec3(dronePos.x + 100.0f,dronePos.y + 10.0f,dronePos.z),glm::vec3(0.0f,1.0f,0.0f));
+        modelview.top() = modelview.top() * glm::inverse(
+            glm::translate(glm::mat4(1.0), moveDrone->getTranslate()) * 
+            rotation * 
+            glm::inverse(glm::translate(glm::mat4(1.0), moveDrone->getTranslate())));
     }
     
     //send projection matrix to GPU    
