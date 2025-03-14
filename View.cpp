@@ -167,11 +167,6 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     rotateDrone->setRotationAxis(glm::axis(totalQuaternion));
     rotateDrone->setRotation(glm::angle(totalQuaternion));
 
-    // cout << "Rotation : " << rotateDrone->getAngleInRadians() << endl;
-    // cout << "Rotate Axis X : " << rotateDrone->getRotationAxis().x << endl;
-    // cout << "Rotate Axis Y : " << rotateDrone->getRotationAxis().y << endl;
-    // cout << "Rotate Axis Z : " << rotateDrone->getRotationAxis().z << endl;
-
     //Drone movement to relative forward direction
     glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), rotateDrone->getAngleInRadians(), rotateDrone->getRotationAxis());
     glm::vec4 forwardVector(1.0f, 0.0f, 0.0f, 1.0f); // Default forward vector
@@ -189,6 +184,8 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 
     modelview.push(glm::mat4(1.0));
 
+    /*Different cameras based on cameraMode. Trackball is only usable in GLOBAL camera mode
+    */
     if (cameraMode == GLOBAL) {
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f,300.0f,300.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
         // rotate by the amount that the cursor travels in the x and y coordinates

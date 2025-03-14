@@ -1,24 +1,14 @@
 Implemented Features:
-- Text Renderer (prints to terminal/console without issue); our visitor is GLScenegraphTextRenderer.h
-
-- Scenegraph model; we have created a simple castle. We have met the criteria of 10 minimum structures; we have the ground,
-  four walls, and the four turrets (each of which are composed of a cylinder, a box, and four smaller boxes). The castle scenegraph
-  is located in castle.txt, and we have created smaller scenegraphs for the turret, turret roof, wall, and ground respectively. We
-  have two humanoids in creative poses; the scenegraphs are akash.txt and jaemin.txt
-
-- File Input; the program will take a command line argument as input and use the file name to open the corresponding scenegraph.
-
-- Camera Position; the camera has a good view of the entire scene; we are also using glm::perspective
-
-- Window: The model will not stretch or squeeze after resizing the window.
-
-Incomplete Features:
-- Trackball; the model will rotate in response to the player pressing and dragging the cursor, however the rotations are incomplete.
-             The model rotates along its relative axes, regardless of its orientation with respect to the camera. These
-             axes rotate along with the model, causing issues with the trackball.
-             However, we have implemented the reset functionality where pressing 'R' or 'r' will reset the trackball to the initial
-             orientation.
+- Everything from Assignment 3 works fully
+- Our scene contains our drone model (can be viewed in drone.txt). It has two propellor fans, each with four blades. The drone has four legs.
+- The propellors are perpetually rotating to show the drone flying. The speed of the propellors can be changed using the 's' and 'f' keys. The 'j'
+  key will make the drone do a sideways roll (it will roll 360 degrees in place)
+- We have implemented the movement and rotation controls mapped to '+', '-', and arrow keys, and the drone position and rotation will be reset by
+  'd' or 'D'
+- We have implemented the global and chopper cameras, as well as the key codes '1' and '2' to switch between them. We decided to have the trackball
+  only be usable when the global camera is active.
+- The drone camera is mapped to the key code '3'. It is placed on top of the drone, so the user will still be able to see a bit of the drone
+  on the bottom side of the window.
 
 Work Split:
-- Everything was done on call together; we collaborated on every aspect of the program that we added or created (the only exceptions
-  are the scenegraph models akash.txt and jaemin.txt, which were created by Akash and Jae-Min respectively).
+- Everything was done on call together; we collaborated on every aspect of the program that we added or created.
